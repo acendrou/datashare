@@ -1,9 +1,6 @@
 package org.icij.datashare.user;
 
-import org.casbin.jcasbin.main.Enforcer;
 import org.casbin.jcasbin.model.Model;
-import org.casbin.jcasbin.persist.Adapter;
-import org.casbin.jcasbin.persist.file_adapter.FileAdapter;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -22,22 +19,15 @@ public class UserPolicyRepositoryAdapterTest {
 
     private UserPolicyRepositoryAdapter adapter;
 
-    public static void testEnforce(Enforcer e, Object sub, Object obj, String act, boolean res) {
-        try {
-            boolean myRes = e.enforce(sub, obj, act);
-            assertEquals(String.format("%s, %s, %s: %b, supposed to be %b", sub, obj, act, myRes, res), res, myRes);
-        } catch (Exception ex) {
-            throw new RuntimeException(String.format("Enforce Error: %s", ex.getMessage()), ex);
-        }
-    }
     @Before
     public void setUp() {
         initMocks(this);
         adapter = new UserPolicyRepositoryAdapter(repository);
     }
 
-   @Test
-    public void testLoadPolicyLoadsPoliciesIntoModel() {
+
+    @Test
+    public void testAdapterLoadPolicy() {
         UserPolicy policy1 = new UserPolicy("user1", "project1", true, false, false);
         UserPolicy policy2 = new UserPolicy("user2", "project2", false, true, true);
         List<UserPolicy> policies = Arrays.asList(policy1, policy2);
@@ -46,16 +36,13 @@ public class UserPolicyRepositoryAdapterTest {
         Model model = new Model();
         String filePath = "src/test/resources/casbin/model.conf";
         model.loadModel(filePath);
-        Enforcer enforcer = new Enforcer(model, adapter);
+        adapter.loadPolicy(model);
 
-        testEnforce(enforcer, "user1", "project1", "read", true);
-        testEnforce(enforcer, "user1", "project1", "write", false);
-        testEnforce(enforcer, "user1", "project1", "admin", false);
-        testEnforce(enforcer, "user2", "project2", "read", false);
-        testEnforce(enforcer, "user2", "project2", "write", true);
-        testEnforce(enforcer, "user2", "project2", "admin", true);
+        List<List<String>> loadedPolicies = model.model.get("p").get("p").policy;
+        assertTrue(loadedPolicies.contains(Arrays.asList("user1", "project1", "read")));
+        assertTrue(loadedPolicies.contains(Arrays.asList("user2", "project2", "write")));
+        assertTrue(loadedPolicies.contains(Arrays.asList("user2", "project2", "admin")));
+        assertFalse(loadedPolicies.contains(Arrays.asList("user1", "project2", "read")));
 
-        //user 1 is not allowed to read project2
-        testEnforce(enforcer, "user1", "project2", "read", false);
     }
 }
