@@ -42,19 +42,18 @@ public class UserPolicyRepositoryAdapter implements Adapter {
 
     @Override
     public void addPolicy(String s, String s1, List<String> list) {
-        throw new UnsupportedOperationException("savePolicy not supported");
-
+        throw new UnsupportedOperationException("addPolicy not supported");
     }
 
     @Override
     public void removePolicy(String s, String s1, List<String> list) {
-        throw new UnsupportedOperationException("savePolicy not supported");
+        throw new UnsupportedOperationException("removePolicy not supported");
 
     }
 
     @Override
     public void removeFilteredPolicy(String s, String s1, int i, String... strings) {
-        throw new UnsupportedOperationException("savePolicy not supported");
+        throw new UnsupportedOperationException("removeFilteredPolicy not supported");
     }
 
 }
