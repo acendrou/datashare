@@ -2,6 +2,8 @@ package org.icij.datashare.user;
 import org.casbin.jcasbin.main.Enforcer;
 import org.casbin.jcasbin.model.Model;
 import org.casbin.jcasbin.persist.Adapter;
+import org.icij.datashare.text.Project;
+
 
 public class UserPolicyVerifier {
     private static UserPolicyVerifier instance;
@@ -23,8 +25,15 @@ public class UserPolicyVerifier {
         return instance;
     }
 
-    public Enforcer getEnforcer() {
-        return enforcer;
+    public boolean enforce(UserPolicy userPolicy) {
+        return this.enforcer.enforce(userPolicy);
+    }
+    public boolean enforce(User user, Project project, UserPolicyRepositoryAdapter.Permission act ) {
+        return this.enforce(user.name, project.name, act.value());
+    }
+
+    public boolean enforce(String userName, String projectName, String permission) {
+        return this.enforcer.enforce(userName, projectName, permission);
     }
 
 }
