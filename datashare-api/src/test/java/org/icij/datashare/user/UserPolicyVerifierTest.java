@@ -23,12 +23,12 @@ public class UserPolicyVerifierTest {
         UserPolicy policy2 = new UserPolicy("user2", "project2", false, true, true);
         List<UserPolicy> policies = Arrays.asList(policy1, policy2);
         when(repository.getAll()).thenReturn(policies);
-        verifier = new UserPolicyVerifier(repository);
+        verifier =  UserPolicyVerifier.getInstance(repository);
     }
-    public static void testEnforce(Enforcer e, Object sub, Object obj, String act, boolean res) {
+    public static void testEnforce(Enforcer enforcer, Object subject, Object obj, String act, boolean expectedResult) {
         try {
-            boolean myRes = e.enforce(sub, obj, act);
-            assertEquals(String.format("%s, %s, %s: %b, supposed to be %b", sub, obj, act, myRes, res), res, myRes);
+            boolean enforcedResult = enforcer.enforce(subject, obj, act);
+            assertEquals(String.format("%s, %s, %s: %b, supposed to be %b", subject, obj, act, enforcedResult, expectedResult), expectedResult, enforcedResult);
         } catch (Exception ex) {
             throw new RuntimeException(String.format("Enforce Error: %s", ex.getMessage()), ex);
         }
