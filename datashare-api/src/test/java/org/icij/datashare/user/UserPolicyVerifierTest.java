@@ -10,7 +10,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 public class UserPolicyVerifierTest {
     @Mock private UserPolicyRepository repository;
@@ -18,7 +18,7 @@ public class UserPolicyVerifierTest {
 
     @Before
     public void setUp() {
-        initMocks(this);
+        openMocks(this);
         UserPolicy policy1 = new UserPolicy("user1", "project1", true, false, false);
         UserPolicy policy2 = new UserPolicy("user2", "project2", false, true, true);
         List<UserPolicy> policies = Arrays.asList(policy1, policy2);
