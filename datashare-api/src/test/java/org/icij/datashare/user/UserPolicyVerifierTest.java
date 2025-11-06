@@ -34,7 +34,7 @@ public class UserPolicyVerifierTest {
         }
     }
     @Test
-    public void testPermissionEnforcement() {
+    public void test_permission_enforcement() {
 
         testEnforce(verifier, "user1", "project1", "read", true);
         testEnforce(verifier, "user1", "project1", "write", false);
@@ -50,7 +50,7 @@ public class UserPolicyVerifierTest {
         testEnforce(verifier, "user1", "project1", "test", false);
     }
     @Test
-    public void testEnforceWithUserProjectPermission() {
+    public void test_enforce_with_user_project_permission() {
         User user1 = new User("user1", "user1", "user1@example.com", "local", "{}");
         User user2 = new User("user2", "user2", "user2@example.com", "local", "{}");
         Project project1 = new Project("project1", "Project 1");
